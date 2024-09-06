@@ -7,6 +7,11 @@ import javax.imageio.ImageIO
 import javax.swing.ImageIcon
 import javax.swing.JOptionPane
 
+/**
+ * The Worttrainer class.
+ * Displays an image and asks for the value.
+ * The data model is saved and loaded using a PersistenceStrategy.
+ */
 class Worttrainer(p: PersistenceStrategy) {
     private var model: Model;
     private var persistence: PersistenceStrategy;
@@ -19,10 +24,12 @@ class Worttrainer(p: PersistenceStrategy) {
 
     /**
      * Runs the Worttrainer.
-     * If the
+     * If the input is empty, the data model is saved and the program ends.
+     * The program will display a random entry from the data model and ask for the value.
      */
     public fun run(){
         // Endless loop until the ineput is empty, like the desc said.
+        println("Worttrainer start")
         while(true){
             val randIndex: Int = (0 until this.model.entries.size).random();
             val e: Entry = this.model.entries[randIndex];
@@ -33,6 +40,7 @@ class Worttrainer(p: PersistenceStrategy) {
                 break;
             }
         }
+        println("Worttrainer end")
     }
 
     /**
@@ -50,7 +58,7 @@ class Worttrainer(p: PersistenceStrategy) {
         val input = JOptionPane.showInputDialog(
             null,
             if (this.previous == null) "Was ist das Wort für dieses Bild?" else if (this.previous!!) "Richtig! Was ist das Wort hierfür?" else "Leider falsch! Was ist das Wort hierfür?",
-            "Worttrainer",
+            "Worttrainer" + if (this.previous!== null) ": ${this.model.countCorrect} richtig, ${this.model.countFalse} falsch" else "",
             JOptionPane.QUESTION_MESSAGE,
             ImageIcon(image),
             null,
@@ -70,13 +78,21 @@ class Worttrainer(p: PersistenceStrategy) {
         return input.toString();
     }
 
+    /**
+     * Loads the data model from the persistence strategy.
+     */
     public fun load(){
         this.model = this.persistence.load();
     }
 
+    /**
+     * Saves the data model to the persistence strategy.
+     */
     public fun save(){
         this.persistence.save(this.model);
     }
+
+    // getter und Setter
 
     public fun getModel(): Model{
         return this.model;

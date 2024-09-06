@@ -60,7 +60,7 @@ class Tests {
             java.io.File("save.json").delete()
         }
         val model = jsonPersistence.load()
-        assertEquals(model, Model(listOf(Entry("https://www.google.com", "Google")), 0, 0))
+        assertEquals(model, Model(listOf(Entry("https://cdn.pixabay.com/photo/2017/02/14/03/03/ama-dablam-2064522_1280.jpg", "Mountain")), 0, 0))
     }
 
     /**
@@ -101,6 +101,8 @@ class Tests {
     fun displayEntryTestWrong(){
         val wt = Worttrainer(JSONPersistence())
         val entry = Entry("https://cdn.pixabay.com/photo/2017/02/14/03/03/ama-dablam-2064522_1280.jpg", "Mountain")
+        val model = Model(listOf(entry), 0, 0)
+        wt.setModel(model);
         // mock the behavior of JOptionPane
         // every time JOptionPane.showInputDialog is called, it will instead just return "Hill"
         Mockito.mockStatic(JOptionPane::class.java).use { mockedJOptionPane ->
@@ -132,6 +134,8 @@ class Tests {
     fun displayEntryTestNull(){
         val wt = Worttrainer(JSONPersistence())
         val entry = Entry("https://cdn.pixabay.com/photo/2017/02/14/03/03/ama-dablam-2064522_1280.jpg", "Mountain")
+        val model = Model(listOf(entry), 0, 0)
+        wt.setModel(model);
         // mock the behavior of JOptionPane
         // every time JOptionPane.showInputDialog is called, it will instead just return null
         Mockito.mockStatic(JOptionPane::class.java).use { mockedJOptionPane ->
@@ -183,6 +187,71 @@ class Tests {
             assertEquals(0, wt.getModel().countCorrect)
             assertEquals(0, wt.getModel().countFalse)
             assertEquals(null, wt.getPrevious())
+        }
+    }
+
+    /**
+     * Tests if the run function of the Worttrainer class will return the correct values
+     * when the user enters one correct and one wrong value.
+     * Also checks if the model data is updated correctly.
+     */
+    @Test
+    fun runTestStandard(){
+        val wt = Worttrainer(JSONPersistence())
+        val entry = Entry("https://cdn.pixabay.com/photo/2017/02/14/03/03/ama-dablam-2064522_1280.jpg", "Mountain")
+        val model = Model(listOf(entry), 0, 0)
+        wt.setModel(model);
+        // mock behaviour of displayEntry
+        Mockito.mockStatic(Worttrainer::class.java).use { mockedWorttrainer ->
+            // also mock the JOptionPane.showInputDialog
+            Mockito.mockStatic(JOptionPane::class.java).use { mockedJOptionPane ->
+                mockedJOptionPane.`when`<String> {
+                    JOptionPane.showInputDialog(
+                        Mockito.any(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyInt(),
+                        Mockito.any(),
+                        Mockito.any(),
+                        Mockito.any()
+                    )
+                }.thenReturn("Mountain", "Cabin", null)
+                wt.run()
+                assertEquals(1, wt.getModel().countCorrect)
+                assertEquals(1, wt.getModel().countFalse)
+            }
+        }
+    }
+
+    /**
+     * Tests if the run function of the Worttrainer class will return the correct value
+     * when the user enteres an empty string. Also checks if the model data is updated correctly.
+     */
+    @Test
+    fun runTestEmpty(){
+        val wt = Worttrainer(JSONPersistence())
+        val entry = Entry("https://cdn.pixabay.com/photo/2017/02/14/03/03/ama-dablam-2064522_1280.jpg", "Mountain")
+        val model = Model(listOf(entry), 0, 0)
+        wt.setModel(model);
+        // mock behaviour of displayEntry
+        Mockito.mockStatic(Worttrainer::class.java).use { mockedWorttrainer ->
+            // also mock the JOptionPane.showInputDialog
+            Mockito.mockStatic(JOptionPane::class.java).use { mockedJOptionPane ->
+                mockedJOptionPane.`when`<String> {
+                    JOptionPane.showInputDialog(
+                        Mockito.any(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyInt(),
+                        Mockito.any(),
+                        Mockito.any(),
+                        Mockito.any()
+                    )
+                }.thenReturn("", null)
+                wt.run()
+                assertEquals(0, wt.getModel().countCorrect)
+                assertEquals(0, wt.getModel().countFalse)
+            }
         }
     }
 }
