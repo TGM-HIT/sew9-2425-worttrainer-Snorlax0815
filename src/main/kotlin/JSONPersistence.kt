@@ -47,7 +47,7 @@ class JSONPersistence() : PersistenceStrategy {
     override fun load(): Model {
         if (!File(defaultLocation).exists()) {
             // load defaults and return
-            return Model(listOf(Entry("https://www.google.com", "Google")), 0, 0)
+            return Model(listOf(Entry("https://cdn.pixabay.com/photo/2017/02/14/03/03/ama-dablam-2064522_1280.jpg", "Mountain")), 0, 0)
         }
         val json = JSONObject(java.io.FileReader(defaultLocation).readText())
         val entries = json.getJSONArray("entries")
