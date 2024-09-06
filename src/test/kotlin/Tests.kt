@@ -153,4 +153,36 @@ class Tests {
             assertEquals(null, wt.getPrevious())
         }
     }
+
+    /**
+     * Tests if the displayEntry function of the Worttrainer class will return null
+     * when the user enters an empty string. Also checks if the model data is updated correctly.
+     */
+    @Test
+    fun displayEntryTestEmpty(){
+        val wt = Worttrainer(JSONPersistence())
+        val entry = Entry("https://cdn.pixabay.com/photo/2017/02/14/03/03/ama-dablam-2064522_1280.jpg", "Mountain")
+        val model = Model(listOf(entry), 0, 0)
+        wt.setModel(model);
+        // mock the behavior of JOptionPane
+        // every time JOptionPane.showInputDialog is called, it will instead just return ""
+        Mockito.mockStatic(JOptionPane::class.java).use { mockedJOptionPane ->
+            mockedJOptionPane.`when`<String> {
+                JOptionPane.showInputDialog(
+                    Mockito.any(),
+                    Mockito.anyString(),
+                    Mockito.anyString(),
+                    Mockito.anyInt(),
+                    Mockito.any(),
+                    Mockito.any(),
+                    Mockito.any()
+                )
+            }.thenReturn("")
+            assertEquals(null, wt.displayEntry(entry))
+            // also check the other model data
+            assertEquals(0, wt.getModel().countCorrect)
+            assertEquals(0, wt.getModel().countFalse)
+            assertEquals(null, wt.getPrevious())
+        }
+    }
 }

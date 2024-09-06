@@ -17,6 +17,10 @@ class Worttrainer(p: PersistenceStrategy) {
         this.model = this.persistence.load()
     }
 
+    /**
+     * Runs the Worttrainer.
+     * If the
+     */
     public fun run(){
         // Endless loop until the ineput is empty, like the desc said.
         while(true){
@@ -54,7 +58,7 @@ class Worttrainer(p: PersistenceStrategy) {
         )
         println(input)
         // update the data model
-        if(input == null) return null;
+        if(input == null || input == "") return null;
         if(input.toString()== e.value){
             this.model.countCorrect++;
             this.previous = true;
