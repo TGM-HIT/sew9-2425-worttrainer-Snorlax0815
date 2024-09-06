@@ -18,11 +18,17 @@ class Worttrainer(p: PersistenceStrategy) {
     }
 
     public fun run(){
-
-    }
-
-    public fun load(){
-        this.model = this.persistence.load();
+        // Endless loop until the ineput is empty, like the desc said.
+        while(true){
+            val randIndex: Int = (0 until this.model.entries.size).random();
+            val e: Entry = this.model.entries[randIndex];
+            val input = this.displayEntry(e);
+            // at the end save the data model
+            if(input == null){
+                this.save()
+                break;
+            }
+        }
     }
 
     /**
@@ -48,6 +54,7 @@ class Worttrainer(p: PersistenceStrategy) {
         )
         println(input)
         // update the data model
+        if(input == null) return null;
         if(input.toString()== e.value){
             this.model.countCorrect++;
             this.previous = true;
@@ -57,6 +64,10 @@ class Worttrainer(p: PersistenceStrategy) {
             this.previous = false;
         }
         return input.toString();
+    }
+
+    public fun load(){
+        this.model = this.persistence.load();
     }
 
     public fun save(){
