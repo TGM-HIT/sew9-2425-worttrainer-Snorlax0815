@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.0.10"
     application
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "tgm.mrafeiner"
@@ -28,4 +29,13 @@ kotlin {
 
 application {
     mainClass.set("tgm.mrafeiner.MainKt")
+}
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "tgm.mrafeiner.MainKt"
+    }
+}
+tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+    archiveClassifier.set("")
 }
