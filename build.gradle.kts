@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "2.0.10"
-    id("org.jetbrains.dokka") version "1.9.20"
+    application
 }
 
 group = "tgm.mrafeiner"
@@ -24,4 +24,8 @@ tasks.test {
 
 kotlin {
     jvmToolchain(21)
+}
+
+application {
+    mainClass.set("your.main.class.path.MainKt")
 }
