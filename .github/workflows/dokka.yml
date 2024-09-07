@@ -1,4 +1,4 @@
-name: Generate and Publish Dokka Documentation
+name: Generate Dokka Documentation
 
 on:
   push:
@@ -31,8 +31,10 @@ jobs:
       - name: Generate Dokka documentation
         run: ./gradlew dokkaHtml
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/dokka/html
+      - name: Commit and push Dokka documentation
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add build/dokka/html
+          git commit -m 'Update Dokka documentation'
+          git push origin main
