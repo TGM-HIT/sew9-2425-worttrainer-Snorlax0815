@@ -27,5 +27,5 @@ kotlin {
 }
 
 application {
-    mainClass.set("your.main.class.path.MainKt")
+    mainClass.set("tgm.mrafeiner.MainKt")
 }
