@@ -11,14 +11,8 @@ import java.io.IOException
  * @author Markus Rafeiner
  * @version 2024-09-06
  */
-class JSONPersistence(private var location: String) : PersistenceStrategy {
+class JSONPersistence(private var location: String = "save.json") : PersistenceStrategy {
     override val defaultLocation: String = "save.json"
-
-    init{
-        if(this.location == ""){
-            this.location = defaultLocation
-        }
-    }
 
     /**
      * Saves the model to a JSON file

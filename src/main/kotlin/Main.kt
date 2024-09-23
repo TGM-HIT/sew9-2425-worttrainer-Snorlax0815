@@ -5,7 +5,7 @@ fun main(args: Array<String>) {
     wt = if (args.isNotEmpty()) {
         Worttrainer(JSONPersistence(location = args[0]))
     }else{
-        Worttrainer(JSONPersistence(location = ""))
+        Worttrainer(JSONPersistence())
     }
 
     wt.run()
