@@ -1,6 +1,12 @@
 package tgm.mrafeiner
 
-fun main() {
-    val wt = Worttrainer(JSONPersistence())
+fun main(args: Array<String>) {
+    val wt: Worttrainer
+    wt = if (args.isNotEmpty()) {
+        Worttrainer(JSONPersistence(location = args[0]))
+    }else{
+        Worttrainer(JSONPersistence(location = ""))
+    }
+
     wt.run()
 }

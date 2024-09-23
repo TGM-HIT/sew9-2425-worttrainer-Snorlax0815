@@ -17,6 +17,7 @@ class Worttrainer(p: PersistenceStrategy) {
     private var persistence: PersistenceStrategy;
     private var previous: Boolean? = null;
 
+
     init {
         this.persistence = p;
         this.model = this.persistence.load()

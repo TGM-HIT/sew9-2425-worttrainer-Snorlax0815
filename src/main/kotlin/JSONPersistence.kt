@@ -11,7 +11,15 @@ import java.io.IOException
  * @author Markus Rafeiner
  * @version 2024-09-06
  */
-class JSONPersistence() : PersistenceStrategy {
+class JSONPersistence(private var location: String) : PersistenceStrategy {
+    override val defaultLocation: String = "save.json"
+
+    init{
+        if(this.location == ""){
+            this.location = defaultLocation
+        }
+    }
+
     /**
      * Saves the model to a JSON file
      */
@@ -21,7 +29,7 @@ class JSONPersistence() : PersistenceStrategy {
         json.put("countFalse", m.countFalse)
         json.put("entries", m.entries)
         // println(json.toString())
-        val file = File(defaultLocation)
+        val file = File(this.location)
         try {
             file.createNewFile()
             file.setWritable(true, false)
@@ -32,11 +40,11 @@ class JSONPersistence() : PersistenceStrategy {
                 writer.flush()
                 writer.close()
             } else {
-                error("Cannot write to file $defaultLocation")
+                error("Cannot write to file $location")
             }
         } catch (e: IOException) {
             e.printStackTrace()
-            error("Cannot write to file $defaultLocation")
+            error("Cannot write to file $location")
         }
     }
 
@@ -45,11 +53,11 @@ class JSONPersistence() : PersistenceStrategy {
      * If the file does not exist, a default model is returned
      */
     override fun load(): Model {
-        if (!File(defaultLocation).exists()) {
+        if (!File(this.location).exists()) {
             // load defaults and return
             return Model(listOf(Entry("https://cdn.pixabay.com/photo/2017/02/14/03/03/ama-dablam-2064522_1280.jpg", "Mountain")), 0, 0)
         }
-        val json = JSONObject(java.io.FileReader(defaultLocation).readText())
+        val json = JSONObject(java.io.FileReader(location).readText())
         val entries = json.getJSONArray("entries")
         val entriesList = mutableListOf<Entry>()
         for (i in 0 until entries.length()){
@@ -63,5 +71,5 @@ class JSONPersistence() : PersistenceStrategy {
         )
     }
 
-    override val defaultLocation: String = "save.json"
+
 }

@@ -1,6 +1,6 @@
 package tgm.mrafeiner
 
-interface PersistenceStrategy {
+interface PersistenceStrategy{
     fun save(m: Model): Unit;
     fun load(): Model;
     val defaultLocation: String;

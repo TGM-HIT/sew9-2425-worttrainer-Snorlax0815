@@ -1,3 +1,6 @@
+import org.gradle.kotlin.dsl.runtimeClasspath
+import kotlin.text.set
+
 plugins {
     kotlin("jvm") version "2.0.10"
     application
@@ -38,4 +41,12 @@ tasks.jar {
 }
 tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     archiveClassifier.set("")
+}
+
+tasks.register<JavaExec>("runWithArgs") {
+    group = "application"
+    description = "Run the application with command-line arguments"
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("tgm.mrafeiner.MainKt")
+    args = project.findProperty("appArgs")?.toString()?.split(",") ?: listOf()
 }
